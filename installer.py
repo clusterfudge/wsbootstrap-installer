@@ -13,9 +13,9 @@ import errno
 import zipfile
 
 try:
-    import httplib2
+    import urllib2
 except:
-    print("Failed to import httplib2. Try installing globally with easy_install or pip.")
+    print("Failed to import urllib2. Try installing globally with easy_install or pip.")
     sys.exit(1)
 
 WSBOOTSTRAP_REPO_URL="http://api.github.com/repos/clusterfudge/wsbootstrap"
@@ -33,8 +33,8 @@ def mkdir_p(path):
             raise
 
 def get(url, result_file=None):
-    http = httplib2.Http()
-    response, content = http.request(url)
+    response = urllib2.urlopen(url)
+    content = response.read()
     if result_file:
         with open(result_file, 'wb') as f:
             f.write(content)
