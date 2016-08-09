@@ -10,7 +10,7 @@ import sys
 import subprocess
 import os
 import errno
-import zipfile
+import tarfile
 
 try:
     import urllib2
@@ -21,7 +21,7 @@ except:
 WSBOOTSTRAP_REPO_URL="http://api.github.com/repos/clusterfudge/wsbootstrap"
 GET_REF_RESOURCE = "/git/refs"
 GET_TAGS_RESOURCE = "/tags"
-GET_ZIPBALL_RESOURCE = "/zipball"
+GET_TARBALL_RESOURCE = "/tarball"
 
 def mkdir_p(path):
     try:
@@ -63,17 +63,17 @@ else:
 release_commit_url = WSBOOTSTRAP_REPO_URL + GET_REF_RESOURCE + "/" + release_ref
 release_commit = json.loads(get(release_commit_url)).get('object').get('sha')
 
-# download zipball
-zipball_url = WSBOOTSTRAP_REPO_URL + GET_ZIPBALL_RESOURCE + "/" + release_commit
-zipball_download_file = "/tmp/wsbootstrap-%s.zip" % release_name
-print("Downloading " + zipball_url + "...")
-get(zipball_url, zipball_download_file)
+# download tarball
+tarball_url = WSBOOTSTRAP_REPO_URL + GET_TARBALL_RESOURCE + "/" + release_commit
+tarball_download_file = "/tmp/wsbootstrap-%s.tar.gz" % release_name
+print("Downloading " + tarball_url + "...")
+get(tarball_url, tarball_download_file)
 
 # extract zipfile into development directory
 extract_location = os.path.join(os.path.expanduser('~'), 'development', 'wsbootstrap')
 mkdir_p(extract_location)
 
-zipref = zipfile.ZipFile(zipball_download_file, 'r')
+zipref = tarfile.open(tarball_download_file, 'r:gz')
 zipref.extractall(extract_location)
 zipref.close()
 
