@@ -18,7 +18,7 @@ except:
     print("Failed to import urllib2. Try installing globally with easy_install or pip.")
     sys.exit(1)
 
-WSBOOTSTRAP_REPO_URL="http://api.github.com/repos/clusterfudge/wsbootstrap"
+WSBOOTSTRAP_REPO_URL="https://api.github.com/repos/clusterfudge/wsbootstrap"
 GET_REF_RESOURCE = "/git/refs"
 GET_TAGS_RESOURCE = "/tags"
 GET_TARBALL_RESOURCE = "/tarball"
@@ -32,7 +32,9 @@ def mkdir_p(path):
         else:
             raise
 
+
 def get(url, result_file=None):
+    print(url)
     response = urllib2.urlopen(url)
     content = response.read()
     if result_file:
@@ -47,8 +49,9 @@ if len(sys.argv) > 0 and sys.argv[0] == '-':
 # allow installer to specify release from command line
 # default is latest release, or latest git tag
 release_name = "latest"
-if len(sys.argv) > 0 and len(sys.argv[0].strip()) > 0:
+if len(sys.argv) > 0 and len(sys.argv[0].strip()) > 0 and not sys.argv[0].endswith("installer.py"):
     release_name = sys.argv[0]
+
 
 if release_name == "latest":
     releases = json.loads(get(WSBOOTSTRAP_REPO_URL + GET_TAGS_RESOURCE))
